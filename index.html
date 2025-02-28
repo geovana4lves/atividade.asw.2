@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crie Seu Animal Amigo!</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABDo+4O4+KnujsnCR+d3v91W5vXd0RkVkk/q/tKtwQPMtZ4Zn4G4g5w" crossorigin="anonymous">
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+      background-color: palevioletred;
+      color: whitesmoke;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      color: plum;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: whitesmoke;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+
+    h2 {
+      color: plum;
+    }
+
+    label {
+      font-size: 1.1em;
+    }
+
+    input, select {
+      margin-top: 10px;
+      padding: 10px;
+      font-size: 1em;
+      width: 80%;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    .step {
+      margin-bottom: 20px;
+    }
+
+    #animal-container {
+      margin-top: 30px;
+    }
+
+    #animal-interaction button {
+      padding: 10px 20px;
+      background-color: lightcoral;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin: 10px;
+      cursor: pointer;
+    }
+
+    #animal-interaction button:hover {
+      background-color: palegoldenrod;
+    }
+
+    .btn-info, .btn-success {
+      border-radius: 5px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .step {
+      animation: fadeIn 1s ease-out;
+    }
+
+    .bs-stepper-header {
+      margin-bottom: 30px;
+    }
+
+    .bs-stepper-circle {
+      background-color:  palevioletred; 
+      color: #fff;
+    }
+
+    .bs-stepper-label {
+      color: palevioletred;
+    }
+  </style>
+</head>
+<body>
+  <h1>Criando animais!</h1>
+
+  <div class="container">
+    <!-- Stepper com classes do Bootstrap -->
+    <div class="bs-stepper" id="stepper1">
+      <div class="bs-stepper-header" role="tablist">
+        <div class="step" data-bs-target="#step1">
+          <button type="button" class="step-trigger" role="tab" aria-controls="step1" id="step1-trigger">
+            <span class="bs-stepper-circle">1</span>
+            <span class="bs-stepper-label">Selecione o Animal:</span>
+          </button>
+        </div>
+        <div class="step" data-bs-target="#step2">
+          <button type="button" class="step-trigger" role="tab" aria-controls="step2" id="step2-trigger">
+            <span class="bs-stepper-circle">2</span>
+            <span class="bs-stepper-label">Nome e Cor:</span>
+          </button>
+        </div>
+        <div class="step" data-bs-target="#step3">
+          <button type="button" class="step-trigger" role="tab" aria-controls="step3" id="step3-trigger">
+            <span class="bs-stepper-circle">3</span>
+            <span class="bs-stepper-label">Confirmar Animal:</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="bs-stepper-content">
+        <div id="step1" class="content" role="tabpanel" aria-labelledby="step1-trigger">
+          <h2>Escolha um animal para criar seu amigo!</h2>
+          <label for="animal">Escolha um animal:</label>
+          <select id="animal" class="form-select">
+            <option value="cachorro">Cachorro</option>
+            <option value="gato">Gato</option>
+            <option value="passaro">Pássaro</option>
+            <option value="peixe">Peixe</option>
+            <option value="cavalo">Cavalo</option>
+          </select>
+          <button type="button" class="btn btn-success mt-3" onclick="nextStep(2)">Próximo</button>
+        </div>
+
+        <div id="step2" class="content" role="tabpanel" aria-labelledby="step2-trigger">
+          <h2>Agora, vamos dar um nome e uma cor para o seu novo amigo!</h2>
+          <label for="name">Qual o nome dele?</label>
+          <input type="text" id="name" class="form-control" placeholder="Nome do animal" required>
+
+          <label for="color">Escolha a cor do seu animal:</label>
+          <input type="color" id="color" class="form-control" required>
+
+          <button type="button" class="btn btn-success mt-3" onclick="nextStep(3)">Próximo</button>
+          <button type="button" class="btn btn-secondary mt-3" onclick="prevStep(1)">Voltar</button>
+        </div>
+
+        <div id="step3" class="content" role="tabpanel" aria-labelledby="step3-trigger">
+          <h2>Aqui está seu amigo:</h2>
+          <p id="animal-info"></p>
+          <button type="button" class="btn btn-primary" onclick="createAnimal()">Criar Animal</button>
+          <button type="button" class="btn btn-secondary" onclick="prevStep(2)">Voltar</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="animal-container" style="display:none;">
+      <h3>Agora você pode interagir com seu novo amigo!</h3>
+      <div id="animal-interaction">
+        <button id="sound-btn" class="btn btn-info" aria-label="Ouvir o som do animal">Ouvir o som</button>
+        <button id="move-btn" class="btn btn-info" aria-label="Ver o movimento do animal">Ver o movimento</button>
+      </div>
+    </div>
+  </div>
+
+  <audio id="sound" style="display:none;"></audio>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Classe base Animal
+    class Animal {
+      constructor(nome, cor) {
+        this._nome = nome;
+        this._cor = cor;
+      }
+
+      // Métodos para som e movimento (podem ser sobrescritos)
+      fazerSom() {
+        console.log("Som do animal");
+      }
+
+      mover() {
+        console.log("Movendo-se");
+      }
+
+      get nome() {
+        return this._nome;
+      }
+
+      get cor() {
+        return this._cor;
+      }
+    }
+
+    // Classes derivadas dos animais
+    class Cachorro extends Animal {
+      fazerSom() {
+        return "Au au!";
+      }
+
+      mover() {
+        return "Correndo feliz!";
+      }
+    }
+
+    class Gato extends Animal {
+      fazerSom() {
+        return "Miau!";
+      }
+
+      mover() {
+        return "Saltando de alegria!";
+      }
+    }
+
+    class Passaro extends Animal {
+      fazerSom() {
+        return "Piu piu!";
+      }
+
+      mover() {
+        return "Voando alto no céu!";
+      }
+    }
+
+    class Peixe extends Animal {
+      fazerSom() {
+        return ""; // Peixe não faz som
+      }
+
+      mover() {
+        return "Nadando nas águas tranquilas!";
+      }
+    }
+
+    class Cavalo extends Animal {
+      fazerSom() {
+        return "Irá!";
+      }
+
+      mover() {
+        return "Galopando pela pradaria!";
+      }
+    }
+
+    // Instância de animal baseado na escolha do usuário
+    let animalEscolhido = null;
+
+    function createAnimal() {
+      const nome = document.getElementById("name").value;
+      const cor = document.getElementById("color").value;
+      const tipoAnimal = document.getElementById("animal").value;
+
+      // Validação de campos
+      if (!nome || !cor) {
+        alert("Por favor, preencha o nome e a cor do seu animal.");
+        return;
+      }
+
+      switch (tipoAnimal) {
+        case "cachorro":
+          animalEscolhido = new Cachorro(nome, cor);
+          break;
+        case "gato":
+          animalEscolhido = new Gato(nome, cor);
+          break;
+        case "passaro":
+          animalEscolhido = new Passaro(nome, cor);
+          break;
+        case "peixe":
+          animalEscolhido = new Peixe(nome, cor);
+          break;
+        case "cavalo":
+          animalEscolhido = new Cavalo(nome, cor);
+          break;
+      }
+
+      showAnimalInfo();
+      showInteraction();
+    }
+
+    function showAnimalInfo() {
+      const animalInfo = document.getElementById("animal-info");
+      animalInfo.innerHTML = `
+        <strong>Nome:</strong> ${animalEscolhido.nome}<br>
+        <strong>Cor:</strong> ${animalEscolhido.cor}<br>
+        <p>Agora, você pode ouvir o som e ver o movimento do seu amigo!</p>
+      `;
+      document.getElementById("animal-container").style.display = "block";
+    }
+
+    function showInteraction() {
+      const soundBtn = document.getElementById("sound-btn");
+      const moveBtn = document.getElementById("move-btn");
+
+      soundBtn.addEventListener("click", () => {
+        const som = animalEscolhido.fazerSom();
+        if (som) {
+          alert(`O som do seu animal é: ${som}`);
+        } else {
+          alert("Este animal não faz som, mas é muito legal!");
+        }
+      });
+
+      moveBtn.addEventListener("click", () => {
+        const movimento = animalEscolhido.mover();
+        alert(`Seu animal está agora: ${movimento}`);
+      });
+    }
+
+    // Funções para navegação entre etapas do formulário
+    const stepper = new bootstrap.Stepper(document.querySelector('#stepper1'));
+
+    function nextStep(step) {
+      stepper.next();
+    }
+
+    function prevStep(step) {
+      stepper.previous();
+    }
+  </script>
+</body>
+</html>
